@@ -12,22 +12,21 @@ import (
 //	and returns bytes, all whilst using the SSH Agent
 func (a *Agent) Encrypt(b []byte) ([]byte, error) {
 	var challenge [64]byte
-
-	_, err := rand.Read(challenge[:])
-	if err != nil {
-		return []byte{}, fmt.Errorf("filling challenge buffer, %s", err)
+	if _, err := rand.Read(challenge[:]); err != nil {
+		return []byte{}, fmt.Errorf("%s", err)
 	}
 
-	sig, err := sign(a.signers, challenge[:])
+	sig, err := sshcryptactions.Sign(a.signer, challenge[:])
 	if err != nil {
-		return []byte{}, fmt.Errorf("signing, %s", err)
+		return []byte{}, fmt.Errorf("%s", err)
 	}
 
-	cipher, err := sshcryptactions.EncryptWithPassword(sig.Blob, b)
+	cipherText, err := sshcryptactions.EncryptWithPassword(sig.Blob, b)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("%s", err)
 	}
-	result := sshcryptdata.EncodeChallengeCipherText(challenge[:], cipher)
+
+	result := sshcryptdata.EncodeChallengeCipherText(challenge[:], cipherText)
 
 	return []byte(result), nil
 }

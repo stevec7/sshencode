@@ -20,7 +20,7 @@ type Agent struct {
 	pubKey  []byte
 
 	// the signer we get from the ssh agent
-	signers ssh.Signer
+	signer ssh.Signer
 }
 
 // Configure builds out an agent struct that can be used to
@@ -66,7 +66,7 @@ func newAgent() (*Agent, error) {
 		return newAgent, fmt.Errorf("only 1 signer is supported right now")
 	}
 	newAgent.agent = a
-	newAgent.signers = signers[0]
+	newAgent.signer = signers[0]
 
 	return newAgent, nil
 }

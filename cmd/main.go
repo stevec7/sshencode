@@ -24,16 +24,15 @@ func main() {
 	if *decrypt != "" {
 		data, err = agent.Decrypt([]byte(*decrypt))
 		if err != nil {
-			fmt.Printf("Error decryption, %s\n", err)
+			fmt.Printf("Error in decryption, %s\n", err)
 			os.Exit(1)
 		}
 	} else if *encrypt != "" {
 		data, err = agent.Encrypt([]byte(*encrypt))
 		if err != nil {
-			fmt.Printf("Error decryption, %s\n", err)
+			fmt.Printf("Error in encryption, %s\n", err)
 			os.Exit(1)
 		}
 	}
-	fmt.Printf("Result: %s\n", string(data))
-
+	fmt.Printf("%s\n", string(data))
 }

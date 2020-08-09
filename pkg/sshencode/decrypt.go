@@ -11,21 +11,19 @@ import (
 func (a *Agent) Decrypt(b []byte) ([]byte, error) {
 	challenge, cipherText, err := sshcryptdata.DecodeChallengeCipherText(string(b))
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("%s", err)
 	}
-
-	sig, err := sign(a.signers, challenge[:])
+	sig, err := sshcryptactions.Sign(a.signer, challenge)
 	if err != nil {
-		return []byte{}, fmt.Errorf("signing, %s", err)
+		return []byte{}, fmt.Errorf("%s", err)
 	}
 
 	clearText, ok, err := sshcryptactions.DecryptWithPassword(sig.Blob, cipherText)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, fmt.Errorf("%s", err)
 	}
-	fmt.Printf("arg: %s, clearText: %s, ok: %t\n", string(b), clearText, ok)
 	if !ok {
-		return []byte(clearText), fmt.Errorf("could not decrypt")
+		return []byte{}, fmt.Errorf("couldnt decrypt")
 	}
 	return []byte(clearText), nil
 }
