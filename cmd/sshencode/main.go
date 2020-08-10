@@ -33,6 +33,9 @@ func main() {
 			fmt.Printf("Error in encryption, %s\n", err)
 			os.Exit(1)
 		}
+	} else {
+		fmt.Printf("Please supply -d <data> or -e <data>\n")
+		os.Exit(1)
 	}
 	fmt.Printf("%s\n", string(data))
 }
